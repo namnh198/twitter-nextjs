@@ -1,6 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { getProviders, getSession, useSession } from "next-auth/react";
-import { useRecoilState } from "recoil";
-import { modalState } from "../atoms/modalAtom";
 import Head from "next/head";
 import Modal from "../components/Modal";
 import Sidebar from "../components/Sidebar";
@@ -8,7 +7,6 @@ import Login from "../components/Login";
 import Post from "../components/Post";
 import Comment from "../components/Comment";
 import { useRouter } from "next/router";
-import { useEffect } from "react/cjs/react.development";
 import {
   collection,
   onSnapshot,
@@ -17,9 +15,11 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { useState } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/solid";
 import Widgets from "../components/Widgets";
+import { useRecoilState } from "recoil";
+import { modalState } from "../atoms/modalAtom";
+import { useEffect, useState } from "react";
 
 export default function PostPage({
   trendingResults,
@@ -30,8 +30,8 @@ export default function PostPage({
 
   if (!session) return <Login providers={providers} />;
 
-  const [isOpen, setIsOpen] = useRecoilState(modalState);
-  const [post, setPost] = useState();
+  const isOpen = useRecoilState(modalState);
+  const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const router = useRouter();
   const { id } = router.query;
@@ -56,7 +56,7 @@ export default function PostPage({
     <div>
       <Head>
         <title>
-          {post?.username} on Twitter: "{post?.text}"
+          {post?.username} on Twitter: &quot;{post?.text}&quot;
         </title>
         <meta name="description" content="Twitter app build by NextJS" />
         <link rel="icon" href="/favicon.ico" />
